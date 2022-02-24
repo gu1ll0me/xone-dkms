@@ -1,6 +1,10 @@
 # Maintainer: Michał Kopeć <michal@nozomi.space>
 # Contributor: Michał Kopeć <michal@nozomi.space>
 
+# Change default LED brightness value
+# Default: 20 (https://github.com/medusalix/xone/blob/master/driver/common.c#L11)
+_gip_led_brightness_default=4
+
 _pkgname=xone
 pkgname=xone-dkms
 pkgver=0.2
@@ -17,6 +21,12 @@ source=("git+https://github.com/medusalix/xone.git#tag=v${pkgver}"
 		"http://download.windowsupdate.com/c/msdownload/update/driver/drvs/2017/07/1cd6a87c-623f-4407-a52d-c31be49e925c_e19f60808bdcbfbd3c3df6be3e71ffc52e43261e.cab")
 sha256sums=('SKIP'
 		    '65736a84ff4036645b8f8ec602bed91ab6353019c9cb3233decab9feec0f6f04')
+
+prepare() {
+  cd "${srcdir}/${_pkgname}"
+
+  sed -i "0,/GIP_LED_BRIGHTNESS_DEFAULT.*/{s/GIP_LED_BRIGHTNESS_DEFAULT.*/GIP_LED_BRIGHTNESS_DEFAULT ${_gip_led_brightness_default}/}" driver/common.c
+}
 
 package() {
   cd "${srcdir}/${_pkgname}"
